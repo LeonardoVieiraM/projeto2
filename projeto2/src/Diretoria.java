@@ -1,47 +1,84 @@
+import java.util.List;
+
 public class Diretoria {
-    int custodia;
-    int saldoMedio;
-    int clienteNegativo;
-    Clientes maior;
-    Clientes menor;
+    private List<Cliente> clientes;
 
-    public void setClienteNegativo(int clienteNegativo) {
-        this.clienteNegativo = clienteNegativo;
+    public Diretoria(List<Cliente> clientes) {
+        this.clientes = clientes;
     }
 
-    public void setCustodia(int custodia) {
-        this.custodia = custodia;
+    public double calcularTotalCustodia(TipoConta tipoConta) {
+        double totalCustodia = 0;
+        for (Cliente cliente : clientes) {
+            for (Conta conta : cliente.getContas()) {
+                if (conta.getTipoConta() == tipoConta) {
+                    totalCustodia += conta.getSaldo();
+                }
+            }
+        }
+        return totalCustodia;
     }
 
-    public void setMaior(Clientes maior) {
-        this.maior = maior;
+    public double calcularSaldoMedioTodasContas() {
+        double saldoTotal = 0;
+        int totalContas = 0;
+        for (Cliente cliente : clientes) {
+            for (Conta conta : cliente.getContas()) {
+                saldoTotal += conta.getSaldo();
+                totalContas++;
+            }
+        }
+        return totalContas > 0 ? saldoTotal / totalContas : 0;
     }
 
-    public void setMenor(Clientes menor) {
-        this.menor = menor;
+    public int contarClientesSaldoNegativo() {
+        int clientesComSaldoNegativo = 0;
+        for (Cliente cliente : clientes) {
+            double saldoTotal = 0;
+            for (Conta conta : cliente.getContas()) {
+                saldoTotal += conta.getSaldo();
+            }
+            if (saldoTotal < 0) {
+                clientesComSaldoNegativo++;
+            }
+        }
+        return clientesComSaldoNegativo;
     }
 
-    public void setSaldoMedio(int saldoMedio) {
-        this.saldoMedio = saldoMedio;
+    public Cliente clienteComMaiorSaldo() {
+        Cliente clienteMaiorSaldo = null;
+        double maiorSaldo = Double.NEGATIVE_INFINITY;
+
+        for (Cliente cliente : clientes) {
+            double saldoTotal = 0;
+            for (Conta conta : cliente.getContas()) {
+                saldoTotal += conta.getSaldo();
+            }
+
+            if (saldoTotal > maiorSaldo) {
+                maiorSaldo = saldoTotal;
+                clienteMaiorSaldo = cliente;
+            }
+        }
+        return clienteMaiorSaldo;
     }
 
-    public int getClienteNegativo() {
-        return clienteNegativo;
-    }
+    public Cliente clienteComMenorSaldo() {
+        Cliente clienteMenorSaldo = null;
+        double menorSaldo = Double.POSITIVE_INFINITY;
 
-    public int getCustodia() {
-        return custodia;
-    }
+        for (Cliente cliente : clientes) {
+            double saldoTotal = 0;
+            for (Conta conta : cliente.getContas()) {
+                saldoTotal += conta.getSaldo();
+            }
 
-    public Clientes getMaior() {
-        return maior;
-    }
-
-    public Clientes getMenor() {
-        return menor;
-    }
-
-    public int getSaldoMedio() {
-        return saldoMedio;
+            if (saldoTotal < menorSaldo) {
+                menorSaldo = saldoTotal;
+                clienteMenorSaldo = cliente;
+            }
+        }
+        return clienteMenorSaldo;
     }
 }
+
